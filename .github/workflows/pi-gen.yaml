@@ -6,31 +6,23 @@ on:
   workflow_dispatch:
 
 jobs:
-  prepare-deps:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v5
-      - name: Install build dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y coreutils quilt parted qemu-user-static debootstrap zerofree zip \
-            dosfstools e2fsprogs libarchive-tools libcap2-bin grep rsync xz-utils file git curl bc \
-            gpg pigz xxd arch-test bmap-tools kmod
-
   pi-gen:
-    needs: prepare-deps
     runs-on: ubuntu-latest
     steps:
+
       - name: Check out repository
         uses: actions/checkout@v5
         with:
           submodules: 'recursive'
           fetch-depth: 0
 
-      - name: List working directory
-        run: ls -alR ../
-      
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y coreutils quilt parted qemu-user-static debootstrap zerofree zip \
+            dosfstools e2fsprogs libarchive-tools libcap2-bin grep rsync xz-utils file git curl bc \
+            gpg pigz xxd arch-test bmap-tools kmod  
+
       - name: Run pi-gen build
         run: |
           chmod +x ./build-all.sh
